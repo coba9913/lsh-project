@@ -5,46 +5,93 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import DbUtil.Dbutil;
+import DbUtil.JdbcUtil;
 import boradBean.User;
 
-public class DAO {
+public class DAO { // ÎãòÏïÑ Ï†úÎ∞ú closeÏ¢Ä ÌïòÏûê Îãò ÎïåÎ¨∏Ïóê DB ÎßâÌûåÍ±∞ÏòÄÎÑ§....Ìïò...1
 
 	Dbutil db = null;
+	JdbcUtil jdbc = null;
+	User user = null;
 	String sql = "";
-	
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+
 	public DAO() {
 		db = new Dbutil();
+		jdbc = new JdbcUtil();
 	}
-	//¿¸√º ±€¿« ∞πºˆ
-	public int count(){
+
+	public int count() {
 		int cnt = 0;
-		Connection conn = db.getOracleConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		try{
+		conn = db.getOracleConnection();
+		try {
 			sql = "select count (*) from board";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-		}catch(Exception e){
-			
+			if (rs.next()) {
+				cnt = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
 		}
 		return cnt;
 	}
-	//numø° µ˚∏• ±€ π¯»£¿« ¡§∫∏
-	public void write(String num){
-		Connection conn = db.getOracleConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		User user = null;
-		try{
+
+	public List getDBAll(int startRow, int endRow, String key, String keyword) {
+		List list = new ArrayList();
+		conn = db.getOracleConnection();
+		try {
+			if (key == null || keyword == null) {
+				sql = "SELECT * FROM tblboard  WHERE num BETWEEN ? and ?" + "ORDER BY num DESC";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, startRow);
+				pstmt.setInt(2, endRow);
+			} else {
+				sql = "SELECT * FROM tblboard WHERE " + key + " like ? ORDER BY num DESC";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, "%" + keyword + "%");
+			}
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+				user.setNum(rs.getInt("num"));
+				user.setName(rs.getString("name"));
+				user.setPass(rs.getString("pass"));
+				user.setEmail(rs.getString("email"));
+				user.setTitle(rs.getString("title"));
+				user.setContents(rs.getString("contents"));
+				user.setWritedate(rs.getString("writedate"));
+				user.setReadCount(rs.getInt("readcount"));
+				list.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
+		}
+		return list;
+	}
+
+	public void write(String num) {
+		conn = db.getOracleConnection();
+		try {
 			sql = "select * from board where num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, num);
 			rs = pstmt.executeQuery();
-			
-			if(rs.next()){
+
+			if (rs.next()) {
 				user = new User();
 				user.setNum(rs.getInt(1));
 				user.setName(rs.getString(2));
@@ -55,16 +102,18 @@ public class DAO {
 				user.setWritedate(rs.getString(7));
 				user.setReadCount(rs.getInt(8));
 			}
-		}catch(SQLException e){
-			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
 		}
 	}
-	//±€ ª¿‘
+
 	public void insertBoard(ArrayList<User> list) {
-		User user = new User();
-		Connection conn = db.getOracleConnection();
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		user = new User();
+		conn = db.getOracleConnection();
 		try {
 			sql = "INSERT INTO board(num, name, pass, email, title, contents, writedate, readcount)";
 			pstmt.setInt(1, user.getNum());
@@ -77,10 +126,11 @@ public class DAO {
 			pstmt.setInt(8, user.getReadCount());
 			pstmt.executeQuery();
 		} catch (SQLException e) {
-
+			e.printStackTrace();
+		} finally {
+			jdbc.close(pstmt);
+			jdbc.close(conn);
 		}
 	}
-	//¿˙¿Âµ» ±€¿« ∫Òπ–π¯»£ √£±‚
-	public void 
 
 }
