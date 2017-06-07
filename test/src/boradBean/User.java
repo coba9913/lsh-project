@@ -76,5 +76,4 @@ public class User {
 		this.readCount = readCount;
 	}
 	
-	
 }

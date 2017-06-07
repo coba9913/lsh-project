@@ -1,19 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=euc-kr" %>
+ï»¿<%@ page language="java" contentType="text/html; charset=euc-kr" %>
 <HTML>
 <HEAD>
-<TITLE> °Ô½ÃÆÇ </TITLE>
+<TITLE> ê²Œì‹œíŒ </TITLE>
 
 <SCRIPT language="JavaScript">
 function Check()
 {
 if (Write.name.value.length < 1) {
-	alert("ÀÛ¼ºÀÚ¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+	alert("ì‘ì„±ìë¥¼ ì…ë ¥í•˜ì„¸ìš”.");
 	Write.name.focus(); 
         return false;
 	}
 
 if (Write.pass.value.length < 1) {
-	alert("ºñ¹Ğ¹øÈ£¸¦ ÀÔ·ÂÇÏ¼¼¿ä.");
+	alert("ë¹„ë°€ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”.");
 	Write.pass.focus(); 
 	return false;
 	}
@@ -22,19 +22,19 @@ if (Write.email.value.indexOf("@") + "" == "-1" ||
 	Write.email.value.indexOf(".") + "" == "-1" ||
 	Write.email.value == "" )
 	{ 
-		alert("E-mailÀ» ÀÔ·ÂÇÏ¼¼¿ä.");
+		alert("E-mailì„ ì…ë ¥í•˜ì„¸ìš”.");
 		Write.email.focus();
 		return false;
 	}
 
 if (Write.title.value.length < 1) {
-	alert("±ÛÁ¦¸ñÀ» ÀÔ·ÂÇÏ¼¼¿ä.");
+	alert("ê¸€ì œëª©ì„ ì…ë ¥í•˜ì„¸ìš”.");
 	Write.write_title.focus(); 
 	return false;
         }
 
 if (Write.contents.value.length < 1) {
-	alert("±Û³»¿ëÀ» ÀÔ·ÂÇÏ¼¼¿ä.");
+	alert("ê¸€ë‚´ìš©ì„ ì…ë ¥í•˜ì„¸ìš”.");
 	Write.content.focus(); 
 	return false;
         }
@@ -47,7 +47,7 @@ Write.submit();
 
 <BODY>
 
-<center><font size='3'><b> °Ô½ÃÆÇ ±Û¾²±â </b></font>                   
+<center><font size='3'><b> ê²Œì‹œíŒ ê¸€ì“°ê¸° </b></font>                   
 
 <TABLE border='0' width='600' cellpadding='0' cellspacing='0'>
 	<TR>
@@ -61,19 +61,19 @@ Write.submit();
 <TABLE border='0' width='600' cellpadding='2' cellspacing='2'>
 	<TR>
 		<TD width='100' bgcolor='cccccc'>
-			<font size='2'><center><b>ÀÛ¼ºÀÚ</b></center></font> 
+			<font size='2'><center><b>ì‘ì„±ì</b></center></font> 
 		</TD>
 		<TD>
-			<p><input type='text' size='12' name='name' > * ÇÊ¼ö</p>
+			<p><input type='text' size='12' name='name' > * í•„ìˆ˜</p>
 		</TD>
 	</TR>
 
 	<TR>
 		<TD width='100' bgcolor='cccccc'>
-			<font size='2'><center><b>ºñ¹Ğ¹øÈ£</b></center></font>
+			<font size='2'><center><b>ë¹„ë°€ë²ˆí˜¸</b></center></font>
 		</TD>
 		<TD>
-			<p><input type='password' size='12' name='pass'> * ÇÊ¼ö (°Ô½Ã¹° ¼öÁ¤ »èÁ¦½Ã ÇÊ¿äÇÕ´Ï´Ù.)</p>
+			<p><input type='password' size='12' name='pass'> * í•„ìˆ˜ (ê²Œì‹œë¬¼ ìˆ˜ì • ì‚­ì œì‹œ í•„ìš”í•©ë‹ˆë‹¤.)</p>
 		</TD>
 	</TR>
 
@@ -94,7 +94,7 @@ Write.submit();
 
 	<TR>
 		<TD width='100' bgcolor='cccccc'>
-			<font size='2'><center><b>±Û Á¦¸ñ</b></center></font>
+			<font size='2'><center><b>ê¸€ ì œëª©</b></center></font>
 		</TD>
 		<TD>
 			<font size='2'><input type='text' size='70' maxlength='50' name='title'></font>
@@ -103,7 +103,7 @@ Write.submit();
 
 	<TR>
 		<TD bgcolor='cccccc'>
-			<font size='2'><center><b>±Û ³»¿ë</b></center></font>
+			<font size='2'><center><b>ê¸€ ë‚´ìš©</b></center></font>
 		</TD>
 		<TD>
          		<font size='2'>
@@ -123,10 +123,10 @@ Write.submit();
 		<TABLE>
 			<TR>
 				<TD width='100' align='center'>
-					<input Type = 'Reset' Value = '´Ù½Ã ÀÛ¼º'>
+					<input Type = 'Reset' Value = 'ë‹¤ì‹œ ì‘ì„±'>
 				</TD>
 				<TD width='200' align='center'>
-					<input Type = 'Submit' Value = 'µî·Ï'>
+					<input Type = 'Submit' Value = 'ë“±ë¡'>
 				</TD>
 			</TR>
 		</TABLE>
