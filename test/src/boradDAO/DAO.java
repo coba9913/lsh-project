@@ -5,13 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import DbUtil.Dbutil;
 import DbUtil.JdbcUtil;
 import boradBean.User;
 
-public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거였네....하...1
+public class DAO { // �떂�븘 �젣諛� close醫� �븯�옄 �떂 �븣臾몄뿉 DB 留됲엺嫄곗��꽕....�븯...1
 
 	Dbutil db = null;
 	JdbcUtil jdbc = null;
@@ -51,12 +52,12 @@ public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거�
 		conn = db.getOracleConnection();
 		try {
 			if (key == null || keyword == null) {
-				sql = "SELECT * FROM tblboard  WHERE num BETWEEN ? and ?" + "ORDER BY num DESC";
+				sql = "SELECT * FROM board  WHERE num BETWEEN ? and ?" + "ORDER BY num DESC";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, startRow);
 				pstmt.setInt(2, endRow);
 			} else {
-				sql = "SELECT * FROM tblboard WHERE " + key + " like ? ORDER BY num DESC";
+				sql = "SELECT * FROM board WHERE " + key + " like ? ORDER BY num DESC";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, "%" + keyword + "%");
 			}
@@ -83,24 +84,19 @@ public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거�
 		return list;
 	}
 
-	public void write(String num) {
+	public void getDeleteAll(int num, String pass, String goodpass) {
 		conn = db.getOracleConnection();
 		try {
-			sql = "select * from board where num = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, num);
-			rs = pstmt.executeQuery();
+			if (pass.equals(goodpass)) {
+				sql = "DELETE From board WHERE num=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				pstmt.executeUpdate();
 
-			if (rs.next()) {
-				user = new User();
-				user.setNum(rs.getInt(1));
-				user.setName(rs.getString(2));
-				user.setPass(rs.getString(3));
-				user.setEmail(rs.getString(4));
-				user.setTitle(rs.getString(5));
-				user.setContents(rs.getString(6));
-				user.setWritedate(rs.getString(7));
-				user.setReadCount(rs.getInt(8));
+				sql = "UPDATE board SET num = num - 1 WHERE num > ?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setInt(1, num);
+				pstmt.executeUpdate();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -111,7 +107,89 @@ public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거�
 		}
 	}
 
-	public void insertBoard(ArrayList<User> list) {
+	public String getPass(String num) {
+		String pass = "";
+		conn = db.getOracleConnection();
+		try {
+			sql = "select pass from board where num = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, num);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				pass = rs.getString(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
+		}
+		return pass;
+	}
+	
+	public void UpdateAll(String name, String pass, String email, String title, String contents, int num) {
+		conn = db.getOracleConnection();
+		Calendar dateIn = Calendar.getInstance();
+		String indate = Integer.toString(dateIn.get(Calendar.YEAR)) + "-";
+		indate = indate + Integer.toString(dateIn.get(Calendar.MONTH) + 1) + "-";
+		indate = indate + Integer.toString(dateIn.get(Calendar.DATE)) + " ";
+		indate = indate + Integer.toString(dateIn.get(Calendar.HOUR_OF_DAY)) + ":";
+		indate = indate + Integer.toString(dateIn.get(Calendar.MINUTE)) + ":";
+		indate = indate + Integer.toString(dateIn.get(Calendar.SECOND));
+		try {
+			sql = "UPDATE board SET name=?, pass=?, email=?, title=?, contents=?, writedate=? WHERE num=?";
+			pstmt.setString(1, name);
+			pstmt.setString(2, pass);
+			pstmt.setString(3, email);
+			pstmt.setString(4, title);
+			pstmt.setString(5, contents);
+			pstmt.setString(6, indate);
+			pstmt.setInt(7, num);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
+		}
+		
+	}
+
+	public List lineMemo(String num) {
+		conn = db.getOracleConnection();
+		List list = new ArrayList();
+		try {
+			sql = "select * from board where num = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, num);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				user = new User();
+				user.setNum(rs.getInt("num"));
+				user.setName(rs.getString("name"));
+				user.setPass(rs.getString("pass"));
+				user.setEmail(rs.getString("email"));
+				user.setTitle(rs.getString("title"));
+				user.setContents(rs.getString("contents"));
+				user.setWritedate(rs.getString("writedate"));
+				user.setReadCount(rs.getInt("readCount"));
+				list.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
+		}
+		return list;
+	}
+
+	public void 
+	/*public void insertBoard(ArrayList<User> list) {
 		user = new User();
 		conn = db.getOracleConnection();
 		try {
@@ -132,5 +210,5 @@ public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거�
 			jdbc.close(conn);
 		}
 	}
-
+*/
 }

@@ -1,15 +1,16 @@
+<%@page import="boradDAO.DAO"%>
 <%@ page language="java" contentType="text/html; charset=euc-kr" %>
 <%@ page import = "java.sql.*, java.util.*" %>
 <% request.setCharacterEncoding("euc-kr"); %>
 
 <%
-int num  = Integer.parseInt(request.getParameter("num"));
+ int num  = Integer.parseInt(request.getParameter("num"));
 String name = request.getParameter("name");
 String pass = request.getParameter("pass");
 String email = request.getParameter("email");
 String title = request.getParameter("title");
 String contents = request.getParameter("contents");
-
+/*
 Class.forName("oracle.jdbc.OracleDriver");
 
 String url = "jdbc:oracle:thin:@dalma.dongguk.ac.kr:1521:stud2";
@@ -36,7 +37,8 @@ pstmt.setInt(7, num);
 pstmt.executeUpdate();
 
 pstmt.close();
-conn.close();
-
+conn.close(); */
+DAO dao = new DAO();
+dao.UpdateAll(name, pass, email, title, contents, num);
 response.sendRedirect("./listboard.jsp");
 %>

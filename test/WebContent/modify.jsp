@@ -1,3 +1,5 @@
+<%@page import="boradBean.User"%>
+<%@page import="boradDAO.DAO"%>
 <%@ page language="java" contentType="text/html; charset=euc-kr" %>
 <%@ page import = "java.sql.*, java.util.*" %>
 <% request.setCharacterEncoding("euc-kr"); %>
@@ -57,8 +59,21 @@ location.href = "listboard.jsp";
 
 <%
 String num = request.getParameter("num"); 
+DAO dao = new DAO();
+List list = null;
+list = dao.lineMemo(num);
+Iterator it = list.iterator();
+User user;
+while(it.hasNext()){
+	user = (User)it.next();
+	String name = user.getName();
+	String email = user.getEmail();
+	String title = user.getTitle();
+	String contents = user.getContents();
+	String writedate = user.getWritedate();
+	int readCount = user.getReadCount();
 
-Class.forName("oracle.jdbc.OracleDriver");
+/* Class.forName("oracle.jdbc.OracleDriver");
 
 String url = "jdbc:oracle:thin:@dalma.dongguk.ac.kr:1521:stud2";
 Connection conn = DriverManager.getConnection(url,"coba9913","coba9913");
@@ -74,13 +89,13 @@ pstmt.setInt(1, Integer.parseInt(num));
 
 rs = pstmt.executeQuery();
 rs.next();
-
-String name = rs.getString("name");
+ */
+/* String name = rs.getString("name");
 String email = rs.getString("email");
 String title = rs.getString("title");
 String contents = rs.getString("contents").trim();
 String writedate = rs.getString("writedate");
-int readcount = rs.getInt("readcount");
+int readcount = rs.getInt("readcount"); */
 %>
                    
 <center><font size='3'><b> 게시판 글수정 </b></font>                  
@@ -174,14 +189,14 @@ int readcount = rs.getInt("readcount");
 </TABLE>
 
 <%
-}catch(SQLException e){
+/* }catch(SQLException e){
    	out.print("SQL에러 " + e.toString());
 }catch(Exception ex){
    	out.print("JSP에러 " + ex.toString());
 }finally{  
 	rs.close();
 	pstmt.close();
-	conn.close();
+	conn.close(); */
 }
 %>
 

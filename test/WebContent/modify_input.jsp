@@ -1,3 +1,5 @@
+<%@page import="boradBean.User"%>
+<%@page import="boradDAO.DAO"%>
 <%@ page language="java" contentType="text/html; charset=euc-kr" %>
 <%@ page import = "java.sql.*, java.util.*" %>
 <% request.setCharacterEncoding("euc-kr"); %>
@@ -6,7 +8,9 @@
 String num = request.getParameter("num"); 
 String pass = request.getParameter("pass"); 
 
-Class.forName("oracle.jdbc.OracleDriver");
+DAO dao = new DAO();
+pass = dao.getPass(num);
+/* Class.forName("oracle.jdbc.OracleDriver");
 
 String url = "jdbc:oracle:thin:@dalma.dongguk.ac.kr:1521:stud2";
 Connection conn = DriverManager.getConnection(url,"coba9913","coba9913");
@@ -20,15 +24,14 @@ pstmt.setInt(1, Integer.parseInt(num));
 
 rs = pstmt.executeQuery();
 rs.next();
-
-String goodpass = rs.getString("pass").trim();
+ */
+String goodpass = dao.getPass(num).trim();
 if (pass.equals(goodpass)){
 	response.sendRedirect("./modify.jsp?num=" + num);
 }else{
 	response.sendRedirect("./modify_pass.jsp?num=" + num);	
 }
-
-rs.close();
+/* rs.close();
 pstmt.close();
-conn.close();
+conn.close(); */
 %>
