@@ -51,12 +51,12 @@ public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거�
 		conn = db.getOracleConnection();
 		try {
 			if (key == null || keyword == null) {
-				sql = "SELECT * FROM tblboard  WHERE num BETWEEN ? and ?" + "ORDER BY num DESC";
+				sql = "SELECT * FROM board  WHERE num BETWEEN ? and ?" + "ORDER BY num DESC";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setInt(1, startRow);
 				pstmt.setInt(2, endRow);
 			} else {
-				sql = "SELECT * FROM tblboard WHERE " + key + " like ? ORDER BY num DESC";
+				sql = "SELECT * FROM board WHERE " + key + " like ? ORDER BY num DESC";
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, "%" + keyword + "%");
 			}
@@ -132,5 +132,49 @@ public class DAO { // 님아 제발 close좀 하자 님 때문에 DB 막힌거�
 			jdbc.close(conn);
 		}
 	}
+
+	public String goodpass(String num) {
+		conn = db.getOracleConnection();
+		String pass = null;
+		try {
+			sql = "SELECT pass FROM board WHERE num = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(num));
+
+			rs = pstmt.executeQuery();
+			rs.next();
+
+			pass = rs.getString("pass").trim();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
+		}
+		return pass;
+	}
+
+	public void delete(String num) {
+		try {
+			sql = "DELETE From board WHERE num=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(num));
+			pstmt.executeUpdate();
+
+			sql = "UPDATE board SET num = num - 1 WHERE num > ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, Integer.parseInt(num));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			jdbc.close(rs);
+			jdbc.close(pstmt);
+			jdbc.close(conn);
+		}
+	}
+
 
 }
