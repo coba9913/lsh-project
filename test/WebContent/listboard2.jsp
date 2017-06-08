@@ -63,11 +63,24 @@ a:hover {
 		int i = 0;
 		String strSQL = "";
 
-		//뭐한거야 세형아....새롭게 dao 메소드 만들지말고 여기 있는거 뽑아서 사용해라고....죽는다 진짜..
-		//listboard 2가 형이 한거다...
-		DAO dao = new DAO();
-		List list = null;
-		lastRow = dao.count();
+		Class.forName("oracle.jdbc.OracleDriver");
+		String url = "jdbc:oracle:thin:@dalma.dongguk.ac.kr:1521:stud2";
+		Connection conn = DriverManager.getConnection(url, "coba9913", "coba9913");
+
+		Statement stmt = conn.createStatement();
+		ResultSet rs = null;
+
+		if (key == null || keyword == null) {
+			strSQL = "SELECT count(*) FROM board";
+		} else {
+			strSQL = "SELECT count(*) FROM board WHERE " + key + " like '%" + keyword + "%'";
+		}
+		rs = stmt.executeQuery(strSQL);
+		rs.next();
+
+		lastRow = rs.getInt(1);
+
+		rs.close();
 	%>
 
 	<center>
@@ -102,17 +115,25 @@ a:hover {
 
 			<%
 				if (lastRow > 0) {
-					list = dao.getDBAll(startRow, endRow, key, keyword);
-					Iterator it = list.iterator();
-					User user;
-					while (it.hasNext()) {
-						user = (User) it.next();
-						int listnum = user.getNum();
-						String name = user.getName();
-						String email = user.getEmail();
-						String title = user.getTitle();
-						String writedate = user.getWritedate();
-						int readcount = user.getReadCount();
+
+					if (key == null || keyword == null) {
+						strSQL = "SELECT * FROM board WHERE num BETWEEN " + startRow + " and " + endRow
+								+ "ORDER BY num DESC";
+						rs = stmt.executeQuery(strSQL);
+					} else {
+						strSQL = "SELECT * FROM board WHERE " + key + " like '%" + keyword + "%' ORDER BY num DESC";
+						rs = stmt.executeQuery(strSQL);
+					}
+
+					for (i = 1; i < listSize; i++) {
+						while (rs.next()) {
+
+							int listnum = rs.getInt("num");
+							String name = rs.getString("name");
+							String email = rs.getString("email");
+							String title = rs.getString("title");
+							String writedate = rs.getString("writedate");
+							int readcount = rs.getInt("readcount");
 			%>
 
 			<TR bgcolor='ededed'>
@@ -128,6 +149,8 @@ a:hover {
 
 			<%
 				}
+
+					}
 			%>
 
 		</TABLE>
@@ -139,7 +162,11 @@ a:hover {
 		</TABLE>
 
 		<%
+			rs.close();
+				stmt.close();
+				conn.close();
 			}
+
 			if (lastRow > 0) {
 				int setPage = 1;
 				int lastPage = 0;
